@@ -27,7 +27,7 @@ def do_interactive_clone(repos):
     """
     for repo in repos:
         print("%s: %s"%(repo["name"], repo["language"]))
-        print("Clone this repo? (y/n)") 
+        print("Clone this repo? (y/n/exit)") 
         response = input()
         
         if response == "y":
@@ -35,6 +35,9 @@ def do_interactive_clone(repos):
             process = subprocess.Popen(bashCommand, stdout=subprocess.PIPE)
             output, error = process.communicate()
             print(output)
+
+        if response == "exit":
+            break
 
 
 def clone_repos():
