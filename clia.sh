@@ -1,3 +1,3 @@
 #!/usr/bin/env sh
 
-./clia.py "$@"
+ ./clia.py "$@"
