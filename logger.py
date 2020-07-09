@@ -28,8 +28,9 @@ def useFactory():
 
     testFunction()
 
-def useAdapter():
-    print("adapter")
+
+def useFormatter():
+    print("formatter")
 
     logger = logging.getLogger()
 
@@ -48,6 +49,34 @@ def useAdapter():
     logger.warning("warning message")
     logger.error("error message")
     logger.critical("critical message")
+
+
+def useAdapter():
+    print("adapter")
+
+    class LoggerAdapter(logging.LoggerAdapter):
+        def __init__(self, logger, prefix):
+            super(LoggerAdapter, self).__init__(logger, {})
+            self.prefix = prefix
+
+        def process(self, msg, kwargs):
+            return '[%s] %s' % (self.prefix, msg), kwargs
+
+    logger = logging.getLogger(__name__)
+    myHandler = logging.StreamHandler()
+    myFormatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+    myHandler.setFormatter(myFormatter)
+    logger.addHandler(myHandler)
+    logger.setLevel(logging.CRITICAL)
+
+    logger = LoggerAdapter(logger, 'custom prefix')
+
+    logger.debug("debug message")
+    logger.info("info message")
+    logger.warning("warning message")
+    logger.error("error message")
+    logger.critical("critical message")
+
 
 def useFilter():
     print("filter")
@@ -70,7 +99,20 @@ def useFilter():
     testFunction()
 
 
+def useFormat():
+    logging.basicConfig(format="%(trace_id)s - %(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.CRITICAL)
+    
+    values={"trace_id": "52"}
+    logging.debug("debug message", extra=values)
+    logging.info("info message", extra=values)
+    logging.warning("warning message", extra=values)
+    logging.error("error message", extra=values)
+    logging.critical("critical message", extra=values)
+
+
 if __name__ == "__main__":
     useFactory()
+    # useFormatter
     # useAdapter()
     # useFilter()
+    # useFormat()
