@@ -1,3 +1,6 @@
+import requests
+
+
 def load(url):
     try:
         return requests.get(url, allow_redirects=True).content
