@@ -2,6 +2,7 @@
 
 """Interactive tool for repositories cloning from GitHub"""
 
+import os
 import sys
 import requests
 import subprocess
@@ -23,6 +24,10 @@ def get_repos_metadata(user = "vikian050194"):
     return r.json()
 
 
+def repo_name_to_dir(repo_name: str):
+    return repo_name.lower().replace('-', '/', 1)
+
+
 def do_interactive_clone(repos, url_type):
     """Go through list of repositories and clone some of them according to user response
 
@@ -39,11 +44,18 @@ def do_interactive_clone(repos, url_type):
 
     for repo in repos:
         print("%s: %s"%(repo["name"], repo["language"]))
+
+        target_dir = repo_name_to_dir(repo["name"])
+
+        if os.path.exists(target_dir):
+           print("This repo is already cloned")
+           continue
+
         print("Clone this repo? (y/n/exit)")
         response = input()
 
         if response == "y":
-            bashCommand = ["git", "clone" , repo[url], repo["name"].lower().replace('-', '/', 1)]
+            bashCommand = ["git", "clone" , repo[url], target_dir]
             process = subprocess.Popen(bashCommand, stdout=subprocess.PIPE)
             output, error = process.communicate()
             print(output)
