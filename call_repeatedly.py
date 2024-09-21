@@ -6,7 +6,7 @@ def call_repeatedly(interval, func, *args):
     def loop():
         while not stopped.wait(interval): # the first call is in `interval` secs
             func(*args)
-    Thread(target=loop).start()    
+    Thread(target=loop).start()
     return stopped.set
 
 
